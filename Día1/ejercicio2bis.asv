@@ -1,0 +1,19 @@
+function [ output_args ] = ejercicio2bis( input_args )
+%EJERCICIO2 Summary of this function goes here
+%   Detailed explanation goes here
+clear;
+    
+    %Cargamos en numerosAleatorios el fichero.
+    cmin = 0.25;
+    cmax = 0.26;
+    load 'numeros_aleatorios.mat';
+    %Ejercicio2bis
+    
+    tic;
+    a[row, col, value] = find(randomMatrix >= cmin & randomMatrix <= cmax);
+    toc;
+    
+    disp()
+    %Ejercicio2
+    
+    clear('numeros_aleatorios');

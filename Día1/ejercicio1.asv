@@ -1,0 +1,18 @@
+function [ output_args ] = ejercicio1( input_args )
+    clear;
+    
+    %Cargamos en numerosAleatorios el fichero.
+    load 'numeros_aleatorios.mat';
+    
+    tic;
+    
+        maxValues = max(numeros_aleatorios');
+        minValues = min(numeros_aleatorios');
+    
+    toc;
+    
+    disp(maxValues);
+    disp(minValues);
+    
+    clear('numeros_aleatorios');
+end
