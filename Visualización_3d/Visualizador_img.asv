@@ -1,0 +1,4 @@
+function [ output_args ] = Visualizador_img( input_args )
+%VISUALIZADOR_IMG Summary of this function goes here
+%   Detailed explanation goes here
+load()
