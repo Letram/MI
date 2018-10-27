@@ -1,0 +1,18 @@
+function Test_Struct
+    x = rand(1000000, 1);
+    tic;
+    x = f_Ok(x);
+    toc;
+    data.x = x;
+    tic;
+    data = f_NOk(data);
+    toc;
+end
+function x = f_Ok(x)
+    x(50) = 1;
+end
+function data = f_NOk(data)
+    data.x(50) = 1; % Seproduce una reserva de espacio para la variable data
+end
+
+%Aunque la operación es la misma, el tiempo de acceso 
