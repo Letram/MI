@@ -4,5 +4,6 @@ function main1
     function nestfun1
         x = x + 1;
     end
+    x
     whos;
 end
