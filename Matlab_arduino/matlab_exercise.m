@@ -2,7 +2,7 @@
 %DONE - Con el Arduino pasar un texto de alerta a Matlab en el caso de que se supere ese valor máximo.
 %DONE - Crear un canal en ThingSpeak llamado Arduino.
 %DONE - Visualizar en el los valores del voltímetro.
-%Visualizar también el texto en caso de alarma y publicarlo en Twitter en una cuenta creada para la práctica
+%DONE - Visualizar también el texto en caso de alarma y publicarlo en Twitter en una cuenta creada para la práctica
 %Realizar Breve informe.
 function matlab_exercise (numero_muestras)
 	
@@ -13,8 +13,8 @@ function matlab_exercise (numero_muestras)
 	clc;
 	y = zeros(1,1000); %Vector donde se guardarán los datos
 	%Inicializo el puerto serial que utilizaré
-	delete(instrfind({'Port'},{'COM3'}));
-	puerto_serial=serial('COM3');
+	delete(instrfind({'Port'},{'COM5'}));
+	puerto_serial=serial('COM5');
 	puerto_serial.BaudRate=9600;
 	warning('off','MATLAB:serial:fscanf:unsuccessfulRead');
 	
