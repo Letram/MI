@@ -1,13 +1,12 @@
-#include <Event.h>
-#include <Timer.h>
-#include <ThingSpeak.h>
+#include "Timer.h"
+#include "ThingSpeak.h"
 #include <SPI.h>
 #include <Ethernet.h>
 
 #define DHT22_PIN 7
 
 byte mac[] = {0x90, 0xA2, 0xDA, 0x0F, 0x70, 0x87};  //Sustituir YY por el numero de MAC correcto
-byte ip[] = {10, 22, 147, 25}; 
+byte ip[] = {10, 22, 147, 19}; 
 
 EthernetClient client;
 Timer t;
@@ -15,15 +14,34 @@ Timer t;
 boolean estado_boton;
 
 unsigned long myChannelNumber = 635034;
-const char * myWriteAPIKey = "6QYZ6BRDU5J6R9GV";
+const char * myWriteAPIKey = "UKBMB5FBYYJV7SQM";
 
 void setup() {
+  /*
   pinMode(6, INPUT_PULLUP);
   estado_boton = digitalRead(6);
-  Ethernet.begin(mac, ip);
+  if (Ethernet.begin(mac) == 0) {
+    Serial.println("Failed to configure Ethernet using DHCP");
+    for (;;)
+      ;
+  }
+  else {
+    Serial.print("IP asignada por DHCP: ");
+    Serial.println(Ethernet.localIP());
+  }
   ThingSpeak.begin(client);
   Serial.begin(9600);
   t.every (5000, grabaDatos, 10);
+  //grabaDatos();
+*/
+  
+    pinMode(6, INPUT_PULLUP);
+    estado_boton = digitalRead(6);
+    Ethernet.begin(mac, ip);
+    ThingSpeak.begin(client);
+    Serial.begin(9600);
+    t.every (5000, grabaDatos, 10);
+  
 }
 
 void loop() {
@@ -54,4 +72,3 @@ void grabaDatos() {
   ThingSpeak.setField(3, boton);
   ThingSpeak.writeFields(myChannelNumber, myWriteAPIKey);
 }
-
