@@ -27,26 +27,26 @@ end
      [intermKeys,~,idx] = unique(year, 'stable');  
      % group delays by idx and apply @grpstatsfun function to each group
      intermVals = accumarray(idx, delays, size(intermKeys), @countsum);
+     %intermVals es una tupla [n, s] con el número de retrasos en ese
+     %bloque de información como n y la suma de todos los valores de los
+     %retrasos como s
      addmulti(intermKVStore,intermKeys,intermVals); 
  end
+ function meanArrivalByYearReducer(intermKey, intermValIter, outKVStore) 
+    n = 0;
+    s = 0;  
+    % get all sets of intermediate results 
+    while hasnext(intermValIter)     
+       intermValue = getnext(intermValIter);
+       n = n + intermValue(1);  
+       s = s + intermValue(2);
+    end  
+    mean = s/n; 
+    add(outKVStore,intermKey,mean);  
+ end
  
-function out = countsum(x) 
+ function out = countsum(x) 
   n = length(x);
   s = sum(x);
   out = {[n, s]};  
 end
- 
- function meanArrivalByYearReducer(intermKey, intermValIter, outKVStore) 
-     n = 0;
-     s = 0;  
-     % get all sets of intermediate results 
-     while hasnext(intermValIter)     
-        intermValue = getnext(intermValIter);
-        n = n + intermValue(1);  
-        s = s + intermValue(2);
-     end  
-
-     mean = s/n; 
-     add(outKVStore,intermKey,mean);  
- end
-
