@@ -10,11 +10,11 @@
 byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
 byte ip[] = {10, 22, 147, 24}; 
 // IP del servidor
-IPAddress mqtt_server(192, 168, 0,20);
+IPAddress mqtt_server(192, 168, 0, 20);
 
 // Topic con el que trabajamos
-//const char* topicName = "/master/Rayco";
-const char* topicName = "channels/646959/publish/fields/1/VMPXWX1HV7SAFLF8";
+//const char* topicName = "/master/Carlos";
+const char* topicName = "channels/657542/publish/fields/1/7RSIM03KYPFZAVDM";
 //const char* server = "test.mosquitto.org";
 const char* server = "mqtt.thingspeak.com";
 // DHT dht(DHTPIN, DHTTYPE);

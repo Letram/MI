@@ -1,8 +1,8 @@
 
 
-readChannelID = 646959; 
+readChannelID = 657542; 
 
-readAPIKey = 'VMPXWX1HV7SAFLF8'; 
+readAPIKey = 'E5SKLO16R4DPR9WE'; 
 
 fileName = 'datos.txt';
 handler= fopen(fileName,'a');
