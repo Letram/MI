@@ -4,7 +4,7 @@ function [] = Question_One()
 %siendo ese año uno con un valor medianamente bajo en retrasos en
 %comparación con los siguientes. No parece tener una gran repercusión en
 %ese aspecto.
-clear;
+    clear;
     ds = datastore('airlinesmall.csv', 'TreatAsMissing', 'NA');
     ds.SelectedVariableNames = {'DepDelay', 'Year'}; 
     outds = mapreduce(ds, @meanArrivalByYearMapper, @meanArrivalByYearReducer);

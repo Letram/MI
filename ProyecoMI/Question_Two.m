@@ -1,13 +1,22 @@
 function [] = Question_Two()
 %QUESTION_TWO ¿Qué región o regiones de E.E.U.U. suelen tener más cancelaciones de vuelos por razones climatológicas? 
 %             ¿Existe algún motivo para ello? 
+    clear;
     ds = datastore({'airlines/1998.csv','airlines/1999.csv','airlines/2000.csv','airlines/2001.csv','airlines/2002.csv','airlines/2003.csv','airlines/2004.csv','airlines/2005.csv','airlines/2006.csv','airlines/2007.csv','airlines/2008.csv'},'TreatAsMissing', 'NA');
     ds.SelectedVariableNames = {'CancellationCode', 'Cancelled', 'Origin'};
     ds.SelectedFormats{strcmp(ds.SelectedVariableNames, 'CancellationCode')} = '%s';
     ds.SelectedFormats{strcmp(ds.SelectedVariableNames, 'Origin')} = '%s';
 
     outds = mapreduce(ds, @weatherCancelMapper, @weatherCancelReducer);
-    res = readall(outds)
+    res = readall(outds);
+    res = sortrows(res,2,'descend');
+    cats = categorical(res{1:10,'Key'}); 
+    cats = reordercats(cats, res{1:10,'Key'}); 
+    res = varfun(@cell2mat, res(1:10,2)); 
+    bar(cats, table2array(res)); 
+    title('Region with the highest number of cancelations due to weather');
+    xlabel('Airport');
+    ylabel('Number of cancelations');
 end
 
 
