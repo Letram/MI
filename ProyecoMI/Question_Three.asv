@@ -22,17 +22,14 @@ function [] = Question_Three()
     end
     flights = transpose(flights);
     cancelations = transpose(cancelations);
-    combine = [flights cancelations];
+    combine = [flights cancelations]
     subplot(2,1,1);
     bar(days, combine);
-    title('Flights and cancelations by day of the week');
-    xlabel('Day of the week');
-    ylabel('Number of flights and cancelations');
+    title('Flights and cancelations by day');
+    xlabel('Day of');
+    ylabel('Number of cancelations');
     subplot(2,1,2);
     bar(days, delays);
-    title('Average departure delay by day of the week');
-    xlabel('Day of the week');
-    ylabel('Average departure delay');
 end
 
 function holidayFlightsByDayMapper(data, ~, intermKVStore)
@@ -48,11 +45,11 @@ function holidayFlightsByDayMapper(data, ~, intermKVStore)
     %in some files cancelations are nt counting because all data is missing
     cancelations = data.Cancelled;
     unparsedDays = data.DayOfWeek;
-    
     [intermKeysDaysUnparsed,~,idxDaysUnparsed] = unique(unparsedDays, 'stable');
     [intermKeysDays,~,idxDays] = unique(day, 'stable');
     intermValsDays = accumarray(idxDays,delays,size(intermKeysDays),@countsum);
     intermValsCancelations = accumarray(idxDaysUnparsed, cancelations, size(intermKeysDaysUnparsed));
+    whos
     aux = cell2mat(intermValsDays);
     aux = [aux intermValsCancelations];
     out = num2cell(aux,2);
@@ -64,6 +61,10 @@ function out = countsum(x)
     out = {[length(x) sum(x)]};
 end
 
+function out = countCancelled(cancelled)
+    n = sum(cancelled == 1);
+    out = n;
+end
 function holidayFlightsByDayReducer(intermKey, intermValIter, outKVStore)
     sum_occurences = 0;
     s = 0;
