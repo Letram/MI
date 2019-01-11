@@ -5,48 +5,96 @@ function [] = Question_One()
 %comparación con los siguientes. No parece tener una gran repercusión en
 %ese aspecto.
     clear;
-    ds = datastore('airlinesmall.csv', 'TreatAsMissing', 'NA');
-    ds.SelectedVariableNames = {'DepDelay', 'Year'}; 
-    outds = mapreduce(ds, @meanArrivalByYearMapper, @meanArrivalByYearReducer);
+    ds = datastore('airlines/2001.csv', 'TreatAsMissing', 'NA');
+    ds.SelectedVariableNames = {'Cancelled', 'Month'};
+    outds = mapreduce(ds, @meanArrivalByMonthMapper, @meanArrivalByMonthReducer);
     res = readall(outds);
     res = sortrows(res,1,'ascend');
+    figure(1);
     bar(res.Key, table2array(varfun(@cell2mat, res(:,2))));
-    title('Average departure delays from 1998 to 2008');
-    xlabel('Year');
-    ylabel('Average delay');
-    set(gca,'XTick',res.Key)
+    title('Cancelations per month of 2001');
+    xlabel('Month');
+    ylabel('Cancelations');
+    set(gca,'XTick',res.Key);
+
+%     ds = datastore('airlines/2001.csv', 'TreatAsMissing', 'NA');
+%     ds.SelectedVariableNames = {'Cancelled', 'Month', 'DayofMonth'};
+%     outds = mapreduce(ds, @meanArrivalByDayMapper, @meanArrivalByDayReducer);
+%     res = readall(outds);
+%     res = sortrows(res,1,'ascend');
+%     figure(2);
+%     bar(res.Key, table2array(varfun(@cell2mat, res(:,2))));
+%     title('Cancelations per month of 2001');
+%     xlabel('Month');
+%     ylabel('Cancelations');
+%     set(gca,'XTick',res.Key);
 end
 
- function meanArrivalByYearMapper (data, ~, intermKVStore)
-     delays = data.DepDelay; 
-     year = data.Year; 
-     notNaN =~isnan(delays); 
-     year = year(notNaN); 
-     delays = delays(notNaN);  
+ function meanArrivalByMonthMapper (data, ~, intermKVStore)
+     cancelations = data.Cancelled; 
+     month = data.Month; 
+     notNaN =~isnan(cancelations); 
+     month = month(notNaN); 
+     cancelations = cancelations(notNaN);  
      % find the unique days in this chunk 
-     [intermKeys,~,idx] = unique(year, 'stable');  
+     [intermKeys,~,idx] = unique(month, 'stable');  
      % group delays by idx and apply @grpstatsfun function to each group
-     intermVals = accumarray(idx, delays, size(intermKeys), @countsum);
+     intermVals = accumarray(idx, cancelations, size(intermKeys), @countsum);
      %intermVals es una tupla [n, s] con el número de retrasos en ese
      %bloque de información como n y la suma de todos los valores de los
      %retrasos como s
      addmulti(intermKVStore,intermKeys,intermVals); 
  end
- function meanArrivalByYearReducer(intermKey, intermValIter, outKVStore) 
-    n = 0;
+ function meanArrivalByMonthReducer(intermKey, intermValIter, outKVStore) 
     s = 0;  
     % get all sets of intermediate results 
     while hasnext(intermValIter)     
        intermValue = getnext(intermValIter);
-       n = n + intermValue(1);  
-       s = s + intermValue(2);
+       s = s + intermValue(1);
     end  
-    mean = s/n; 
-    add(outKVStore,intermKey,mean);  
+    add(outKVStore,intermKey,s);  
  end
  
  function out = countsum(x) 
-  n = length(x);
   s = sum(x);
-  out = {[n, s]};  
-end
+  out = {s};  
+ end
+
+%   function meanArrivalByDayMapper (data, ~, intermKVStore)
+%      cancelations = data.Cancelled;
+%      month = data.Month; 
+%      dom = data.DayofMonth;
+%      notNaN =~isnan(cancelations); 
+%      month = month(notNaN); 
+%      dom = dom(notNan);
+%      cancelations = cancelations(notNaN);  
+%      september = ismember(month, 9);
+%      domSep = auxCustom(dom, september, cancelations);
+%      % find the unique days in this chunk 
+%      [intermDays,~,daysIndex] = unique(domSep, 'stable');  
+%      % group delays by idx and apply @grpstatsfun function to each group
+%      intermVals = accumarray(daysIndex, cancelations, size(intermDays), @countsum);
+%      %intermVals es una tupla [n, s] con el número de retrasos en ese
+%      %bloque de información como n y la suma de todos los valores de los
+%      %retrasos como s
+%      addmulti(intermKVStore,intermKeys,intermVals); 
+%  end
+%  function meanArrivalByDayReducer(intermKey, intermValIter, outKVStore) 
+%     s = 0;  
+%     % get all sets of intermediate results 
+%     while hasnext(intermValIter)     
+%        intermValue = getnext(intermValIter);
+%        s = s + intermValue(1);
+%     end  
+%     add(outKVStore,intermKey,s);  
+%  end
+%  
+%  function out = auxCustom (dow, september)
+%     res = [];
+%     for i = 1 : length(dow)
+%         if(september(i) == 1 && cancelled(i) == 1)
+%             res = [res dow(i)];
+%         end
+%     end
+%     out = res;
+%  end

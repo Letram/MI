@@ -25,16 +25,21 @@ function [] = Question_Three()
     combine = [flights cancelations];
     
     figure(1);
-    subplot(2,1,1);
-    bar(days, combine);
-    title('Flights and cancelations by day of the week');
+    subplot(3,1,1);
+    bar(days, flights);
+    title('Flights by day of the week');
     xlabel('Day of the week');
-    ylabel('Number of flights and cancelations');
-    subplot(2,1,2);
+    ylabel('Number of flights');
+    subplot(3,1,2);
     bar(days, delays);
     title('Average departure delay by day of the week');
     xlabel('Day of the week');
     ylabel('Average departure delay');
+    subplot(3,1,3);
+    bar(days, cancelations);
+    title('Cancelations by day of the week');
+    xlabel('Day of the week');
+    ylabel('Cancelations');
     
     outds = mapreduce(ds, @holidayFlightsByMonthMapper, @holidayFlightsReducer);
     res = readall(outds);
@@ -55,16 +60,21 @@ function [] = Question_Three()
     combine = [flights cancelations];
     
     figure(2);
-    subplot(2,1,1);
-    bar(days, combine);
-    title('Flights and cancelations by month');
+    subplot(3,1,1);
+    bar(days, flights);
+    title('Flights by month');
     xlabel('Month');
-    ylabel('Number of flights and cancelations');
-    subplot(2,1,2);
+    ylabel('Number of flights');
+    subplot(3,1,2);
     bar(days, delays);
     title('Average departure delay by month');
     xlabel('Month');
     ylabel('Average departure delay');
+    subplot(3,1,3);
+    bar(days, cancelations);
+    title('Cancelations by month');
+    xlabel('Month');
+    ylabel('Cancelations');
 end
 
 function holidayFlightsByDayMapper(data, ~, intermKVStore)
